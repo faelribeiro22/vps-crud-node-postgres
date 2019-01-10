@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  web:
+    image: nginx
+    depends_on:
+      - minha_app
+    volumes:
+      - ./crud-node-postgres/nginx/app.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - ./dados_postgres:/var/lib/postgresql/data
+    ports:
+      - 5432
+  minha_app:
+    image: rafaelribeiro92/app-node-dockerizado:latest
+    build: .
+    depends_on:
+      - db
